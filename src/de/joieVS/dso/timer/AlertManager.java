@@ -51,7 +51,7 @@ public class AlertManager {
 				err.println(
 						"Es wurden keine Ereignisse geladen, da die entsprechende Datei noch nicht zu existieren scheint!");
 			} catch (final IOException e) {
-				err.println("Konnte Datei zum Laden der Ereignisse nicht finden!");
+				err.println("Fehler beim Laden der Ereignisse!");
 				e.printStackTrace();
 			}
 			alerts.notifyAll();

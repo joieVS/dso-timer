@@ -1,7 +1,6 @@
 package de.joieVS.dso.timer;
 
 import static java.lang.System.err;
-import static java.lang.System.out;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -74,10 +73,6 @@ public class AlertUpdater extends Thread {
 	}
 
 	public static void removeTextArea(final Alert alert) {
-		final JTextArea old = updateTargets.remove(alert);
-		if (old == null) {
-			err.println("target to be removed has been removed already");
-		}
-		out.println("continously updating " + updateTargets.size() + " windows...");
+		updateTargets.remove(alert);
 	}
 }
