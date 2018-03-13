@@ -48,8 +48,8 @@ public class AlertManager {
 					}
 				}
 			} catch (final FileNotFoundException fnfe) {
-				err.println("Konnte Datei zum Laden der Ereignisse nicht finden!");
-				fnfe.printStackTrace();
+				err.println(
+						"Es wurden keine Ereignisse geladen, da die entsprechende Datei noch nicht zu existieren scheint!");
 			} catch (final IOException e) {
 				err.println("Konnte Datei zum Laden der Ereignisse nicht finden!");
 				e.printStackTrace();

@@ -28,8 +28,10 @@ public class DsoTimer {
 				CommandProcessor.parse(line);
 			}
 		} catch (final IOException e) {
-			err.println("Tschüss...");
-			e.printStackTrace();
+			if (!"Stream closed".equals(e.getMessage())) {
+				err.println("What happened? |" + e.getMessage() + "|");
+				e.printStackTrace();
+			}
 		}
 		out.println("Bye bye...");
 	}
