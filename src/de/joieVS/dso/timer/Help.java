@@ -21,6 +21,18 @@ public class Help extends CommandProcessor {
 				+ "\t<ereignisTyp> <zu produzieren>/<12h Produktionswert> {Notiz}\tneuen Alarm setzen, auf den Zeitpunkt, zu dem bei dem eingegebenen <12h-Produktionsert> eine entsprechende Menge produziert wurde\n"
 				+ "\t<ereignisTyp> <alarmNr>\t\t\t\t\t\tlöscht den angegebenen Alarm" //
 				+ "\n\n" //
-				+ "Verfügbare EreignisTypen: " + AlertTypes.list());
+				+ "Format der Wartezeit: \n"
+				+ "\tEs können Stunden, Minuten und Sekunden eingegeben werden. Stunde und Minute sind durch s, S, h oder H zu trennen, Minute und Sekunde durch m oder M. \n"
+				+ "\n\n" //
+				+ "Verfügbare EreignisTypen: " + AlertTypes.list() + "\n\n" //
+				+ "Beispiele:\n" //
+				+ "\tEntdecker ist noch 5 Stunden und 13 Minuten unterwegs:\n" //
+				+ "\t\te 5s13\n\n"
+				+ "\tMine hat noch 382 Rest und einen Produktionszyklus von 6:17. Außerdem will ich eine Notiz bekommen, um welche Mine es sich handelt. Ich will benachrichtigt werden, wenn die Mine auf Rest 2 ist.\n" //
+				+ "\t\tm 380x6m17 eisen s8\n\n" //
+				+ "\tFür ein Quest sollen 40 Armbrüste produziert werden, es 38 fehlen noch, der 12h-Produktionswert ist 66. Als Notiz will ich erinnert werden, dass es um das Gildenquest geht.\n" //
+				+ "\t\tq 38/66 gq\n\n"
+				+ "\tIch will erinnert werden, einen Freund in 8 Stunden und 53 Minuten nachzubuffen:\n"
+				+ "\t\ts 8h53 Egon buffen");
 	}
 }
