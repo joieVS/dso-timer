@@ -8,7 +8,9 @@ import java.time.Instant;
 public class Alert implements Comparable<Alert> {
 
 	private static final long ONE_MINUTE = 60 * 1000l;
+	private static final long SECOND_REMINDER = ONE_MINUTE * 5;
 	private static final long ONE_HOUR = 60 * ONE_MINUTE;
+	private static final long FIRST_REMINDER = ONE_HOUR / 2;
 	public final AlertTypes type;
 	public final long time;
 	public final String message;
@@ -20,9 +22,17 @@ public class Alert implements Comparable<Alert> {
 		this.type = type;
 		this.time = time;
 		this.message = message;
-		timeOfNextReminder = time - ONE_HOUR / 2;
+		timeOfNextReminder = time - FIRST_REMINDER;
 		if (timeOfNextReminder < currentTimeMillis()) {
-			timeOfNextReminder = time - ONE_MINUTE * 5;
+			timeOfNextReminder = time - SECOND_REMINDER;
+			alarmCount++;
+		}
+		if (timeOfNextReminder < currentTimeMillis()) {
+			timeOfNextReminder = time - ONE_MINUTE;
+			alarmCount++;
+		}
+		if (timeOfNextReminder < currentTimeMillis()) {
+			timeOfNextReminder = time;
 			alarmCount++;
 		}
 		out.println("Ereignis " + type + " erzeugt. Zeitpunkt: " + Instant.ofEpochMilli(time)
@@ -42,7 +52,7 @@ public class Alert implements Comparable<Alert> {
 		alarmCount++;
 		UIAlert.alert(this);
 		if (alarmCount == 1) {
-			timeOfNextReminder = time - ONE_MINUTE * 5;
+			timeOfNextReminder = time - SECOND_REMINDER;
 		} else if (alarmCount == 2) {
 			timeOfNextReminder = time - ONE_MINUTE;
 		} else {
