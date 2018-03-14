@@ -23,15 +23,15 @@ public class Alert implements Comparable<Alert> {
 		this.time = time;
 		this.message = message;
 		timeOfNextReminder = time - FIRST_REMINDER;
-		if (timeOfNextReminder < currentTimeMillis()) {
+		if (timeOfNextReminder <= currentTimeMillis()) {
 			timeOfNextReminder = time - SECOND_REMINDER;
 			alarmCount++;
 		}
-		if (timeOfNextReminder < currentTimeMillis()) {
+		if (timeOfNextReminder <= currentTimeMillis()) {
 			timeOfNextReminder = time - ONE_MINUTE;
 			alarmCount++;
 		}
-		if (timeOfNextReminder < currentTimeMillis()) {
+		if (timeOfNextReminder <= currentTimeMillis()) {
 			timeOfNextReminder = time;
 			alarmCount++;
 		}
