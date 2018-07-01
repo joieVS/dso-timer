@@ -39,6 +39,8 @@ public class UIAlert {
 				setLocation(dialog);
 				out.println("Dialog erzeugt für Ereignis " + alert);
 			});
+		} else {
+			out.println("Dialog wurde nicht erzeugt, da dieser scheinbar bereits offen ist. Ereignis " + alert);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package de.joieVS.dso.timer;
 
+import static de.joieVS.dso.timer.AlertManager.timeOf;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.out;
 
@@ -35,8 +36,8 @@ public class Alert implements Comparable<Alert> {
 			timeOfNextReminder = time;
 			alarmCount++;
 		}
-		out.println("Ereignis " + type + " erzeugt. Zeitpunkt: " + Instant.ofEpochMilli(time)
-				+ ", nachste Erinnerung um " + Instant.ofEpochMilli(timeOfNextReminder));
+		out.println("Ereignis " + type + " erzeugt. Zeitpunkt: " + Instant.ofEpochMilli(time) + ", nachste Erinnerung um "
+				+ Instant.ofEpochMilli(timeOfNextReminder));
 	}
 
 	@Override
@@ -80,10 +81,10 @@ public class Alert implements Comparable<Alert> {
 	 */
 	public String duration2Event() {
 		final long time2Event = time - currentTimeMillis();
-		return asDuration(time2Event);
+		return asDuration(time2Event, time);
 	}
 
-	private static String asDuration(long time2Event) {
+	private static String asDuration(long time2Event, final long eventTime) {
 		int hours = 0, minutes = 0, seconds = 0;
 		if (time2Event > ONE_HOUR) {
 			hours = (int) (time2Event / ONE_HOUR);
@@ -107,6 +108,7 @@ public class Alert implements Comparable<Alert> {
 		} else {
 			ret.append("JETZT");
 		}
+		ret.append(" bis ").append(timeOf(eventTime));
 		return ret.toString();
 	}
 

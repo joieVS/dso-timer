@@ -1,5 +1,7 @@
 package de.joieVS.dso.timer;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static java.lang.System.err;
 
 import java.util.Iterator;
@@ -39,9 +41,10 @@ public class AlertController extends Thread {
 						} else {
 							AlertManager.persistAlerts();
 						}
-					} else {
-						alerts.wait(msForNextAlert);
 					}
+					// to avoid multiple windows for the same event and extreme delays after wakeup from hibernation,
+					// I decided to always wait at least 0,1s and never more then 5s
+					alerts.wait(max(100, min(5000, msForNextAlert)));
 				}
 			}
 		} catch (final InterruptedException e) {

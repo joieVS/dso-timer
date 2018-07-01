@@ -14,9 +14,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -35,8 +37,7 @@ public class AlertManager {
 		AlertController.startUp(alerts);
 		initialized = true;
 		synchronized (alerts) {
-			try (BufferedReader iniWriter = new BufferedReader(
-					new InputStreamReader(new FileInputStream("alerts.ini"), StandardCharsets.UTF_8))) {
+			try (BufferedReader iniWriter = new BufferedReader(new InputStreamReader(new FileInputStream("alerts.ini"), StandardCharsets.UTF_8))) {
 				String line;
 				while (null != (line = iniWriter.readLine())) {
 					final String[] parts = line.split("\\|", 3);
@@ -48,8 +49,7 @@ public class AlertManager {
 					}
 				}
 			} catch (final FileNotFoundException fnfe) {
-				err.println(
-						"Es wurden keine Ereignisse geladen, da die entsprechende Datei noch nicht zu existieren scheint!");
+				err.println("Es wurden keine Ereignisse geladen, da die entsprechende Datei noch nicht zu existieren scheint!");
 			} catch (final IOException e) {
 				err.println("Fehler beim Laden der Ereignisse!");
 				e.printStackTrace();
@@ -100,23 +100,26 @@ public class AlertManager {
 		createAlert(at, faktor, duration, token.remainder);
 	}
 
-	private static void createAlert(final AlertTypes at, final int faktor, final long duration,
-			final String remainder) {
+	private static void createAlert(final AlertTypes at, final int faktor, final long duration, final String msg) {
 		final long alertMs = currentTimeMillis() + faktor * duration;
 		synchronized (alerts) {
-			alerts.add(new Alert(at, alertMs, remainder));
+			alerts.add(new Alert(at, alertMs, msg));
 			persistAlerts();
 			alerts.notifyAll();
 		}
+	}
+
+	public static String timeOf(final long alertMs) {
+		return new SimpleDateFormat("HH:mm").format(new Date(alertMs));
 	}
 
 	/**
 	 *
 	 */
 	static void persistAlerts() {
+		// could be optimized to synchronously make a copy of alerts and afterwards persist it outside the synchronous block, but not needed here...
 		synchronized (alerts) {
-			try (PrintWriter iniWriter = new PrintWriter(
-					new OutputStreamWriter(new FileOutputStream("alerts.ini"), StandardCharsets.UTF_8))) {
+			try (PrintWriter iniWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream("alerts.ini"), StandardCharsets.UTF_8))) {
 				for (final Alert alert : alerts) {
 					iniWriter.println(alert.type + "|" + Instant.ofEpochMilli(alert.time) + "|" + alert.message);
 				}
@@ -185,8 +188,7 @@ public class AlertManager {
 				}
 			}
 		}
-		err.println("Das Ereignis Nummer " + alertNumber + " vom Typ " + at
-				+ " existiert nicht und wurde daher nicht gelöscht.");
+		err.println("Das Ereignis Nummer " + alertNumber + " vom Typ " + at + " existiert nicht und wurde daher nicht gelöscht.");
 	}
 
 	private static List<Object> splitToParts(String token) {
