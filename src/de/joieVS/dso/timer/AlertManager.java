@@ -166,7 +166,9 @@ public class AlertManager {
 				if (!((String) parts.get(1)).equalsIgnoreCase("m")) {
 					throw new ParseException("optional erwartete Zeiteinheit 'm', gefunden '" + parts.get(1) + "'");
 				}
-				seconds = (Integer) parts.get(2);
+				if (parts.size() > 2) {
+					seconds = (Integer) parts.get(2);
+				}
 			}
 		}
 
