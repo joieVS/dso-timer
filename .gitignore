@@ -1,4 +1,4 @@
 .settings
 bin
-alerts.ini
+*alerts.ini
 .*\~

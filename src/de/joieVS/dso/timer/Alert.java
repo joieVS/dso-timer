@@ -36,7 +36,7 @@ public class Alert implements Comparable<Alert> {
 			timeOfNextReminder = time;
 			alarmCount++;
 		}
-		out.println("Ereignis " + type + " erzeugt. Zeitpunkt: " + Instant.ofEpochMilli(time) + ", nachste Erinnerung um "
+		out.println("Ereignis " + type + " erzeugt. Zeitpunkt: " + Instant.ofEpochMilli(time) + ", nächste Erinnerung um "
 				+ Instant.ofEpochMilli(timeOfNextReminder));
 	}
 

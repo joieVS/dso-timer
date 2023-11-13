@@ -18,7 +18,7 @@ import javax.swing.WindowConstants;
 
 public class UIAlert {
 	public static void alert(final Alert alert) {
-		if (!AlertUpdater.updateActive(alert)) {
+		if (!AlertUpdater.updateActive(alert))
 			SwingUtilities.invokeLater(() -> {
 				final JFrame dialog = new JFrame(alert.type.toString());
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -39,9 +39,8 @@ public class UIAlert {
 				setLocation(dialog);
 				out.println("Dialog erzeugt für Ereignis " + alert);
 			});
-		} else {
+		else
 			out.println("Dialog wurde nicht erzeugt, da dieser scheinbar bereits offen ist. Ereignis " + alert);
-		}
 	}
 
 	/**

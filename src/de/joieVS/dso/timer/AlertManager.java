@@ -5,14 +5,7 @@ import static java.lang.System.currentTimeMillis;
 import static java.lang.System.err;
 import static java.lang.System.out;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -24,20 +17,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import de.joieVS.dso.timer.exception.ParseException;
+
 public class AlertManager {
 
+	private static final String ALERTS_INI = "alerts.ini";
 	private final static Set<Alert> alerts = Collections.synchronizedSet(new TreeSet<Alert>());
 	private static final long HALF_DAY = 12l * 3600l * 1000l;
 	private static boolean initialized = false;
 
-	/**
-	 *
-	 */
 	private static void init() {
 		AlertController.startUp(alerts);
 		initialized = true;
 		synchronized (alerts) {
-			try (BufferedReader iniWriter = new BufferedReader(new InputStreamReader(new FileInputStream("alerts.ini"), StandardCharsets.UTF_8))) {
+			try (BufferedReader iniWriter = new BufferedReader(new InputStreamReader(new FileInputStream(ALERTS_INI), StandardCharsets.UTF_8))) {
 				String line;
 				while (null != (line = iniWriter.readLine())) {
 					final String[] parts = line.split("\\|", 3);
@@ -62,9 +55,8 @@ public class AlertManager {
 		if (params.isEmpty()) {
 			listAlerts(at);
 		} else {
-			final Token token = splitOfFirstToken(params);
 			try {
-				parseAlertParams(at, token);
+				parseAlertParams(at, splitOfFirstToken(params));
 			} catch (final Exception e) {
 				err.println("Ereignisparameter '" + params + "' konnten nicht geparst werden.");
 				e.printStackTrace();
@@ -119,7 +111,8 @@ public class AlertManager {
 	static void persistAlerts() {
 		// could be optimized to synchronously make a copy of alerts and afterwards persist it outside the synchronous block, but not needed here...
 		synchronized (alerts) {
-			try (PrintWriter iniWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream("alerts.ini"), StandardCharsets.UTF_8))) {
+			updateArchive();
+			try (PrintWriter iniWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(ALERTS_INI), StandardCharsets.UTF_8))) {
 				for (final Alert alert : alerts) {
 					iniWriter.println(alert.type + "|" + Instant.ofEpochMilli(alert.time) + "|" + alert.message);
 				}
@@ -127,6 +120,14 @@ public class AlertManager {
 				err.println("Konnte Datei zum Speichern der Ereignisse nicht erzeugen!");
 				fnfe.printStackTrace();
 			}
+		}
+	}
+
+	private static void updateArchive() {
+		final String dateMarker = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+		final File alertsFile = new File(ALERTS_INI);
+		if (!alertsFile.renameTo(new File(dateMarker + "." + ALERTS_INI))) {
+			err.println("Renaming to archive failed!!!");
 		}
 	}
 
